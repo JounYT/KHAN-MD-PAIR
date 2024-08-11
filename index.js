@@ -151,13 +151,7 @@ async function startnigg(phone) {
           await negga.sendMessage(
             negga.user.id,
             {
-              text: '> Hello there! 👋 *KHAN-MD* User
-
-> Do not share your session id with anyone ❌.
-
-*`>`  Thanks for using KHAN-MD 🇵🇰* 
-
- *`Join Our Channel:-`* ⤵️ https://whatsapp.com/channel/0029ValI3UcDDmFYLpCo7F03',
+              text: '> Hello there! \ud83d\udc4b *KHAN-MD* User\n\n> Do not share your session id with anyone ❌.\n\n*`>`  Thanks for using KHAN-MD \ud83c\uddf5\ud83c\uddf0* \n\n *`Join Our Channel:-`* ⤵️ https://whatsapp.com/channel/0029ValI3UcDDmFYLpCo7F03',
             },
             { quoted: guru }
           )
