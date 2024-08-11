@@ -3,130 +3,137 @@
 <head>
  <title>GURU</title>
  <link rel="stylesheet" type="text/css" href="fontawesome/css/all.min.css">
- <style>
-body {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-image: url('https://image.lexica.art/full_webp/109e7582-4bce-466e-9a97-d9650140553d');
-  background-size: cover; 
-  background-position: center; 
-  font-family: 'Helvetica', sans-serif;
-  overflow: hidden;
-  margin: 0;
-}
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #c3ecb2, #75d5a7);
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+    }
 
-.container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 800px; /* Adjusted max-width */
-  max-height: 1000px; /* Adjusted max-height */
-  border-radius: 0;
-  background-color: rgba(255, 255, 255, 0.8);
-  /* Add a semi-transparent white background to make text more readable */
-  box-shadow: 0 0 17px rgba(0, 0, 0, 0.1);
-  padding: 25px;
-}
+    .container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 350px;
+      padding: 30px;
+      border-radius: 20px;
+      background-color: #ffffff;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      z-index: 10;
+    }
 
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
 
+    .header h1 {
+      color: #0b8457;
+      font-size: 22px;
+      margin: 0;
+    }
 
-.header {
-  text-align: center;
-  padding-top: 20px;
-}
+    .main {
+      width: 100%;
+      text-align: center;
+    }
 
-.header h1 {
-  color: #128c7e;
-  font-size: 30px;
-  margin-bottom: 30px;
-}
+    .main input {
+      width: 42%;
+      height: 35px;
+      border: 1px solid #ccc;
+      padding: 5px 10px;
+      font-size: 15px;
+      margin-bottom: 15px;
+      border-radius: 20px;
+      text-align: center;
+      transition: box-shadow 0.3s ease;
+      margin-right: 5px;
+    }
 
-.main {
-  text-align: center;
-}
+    .main input:focus {
+      box-shadow: 0 0 10px #75d5a7;
+    }
 
-.main input {
-  width: calc(100% - 30px); /* Adjusted width */
-  height: 60px;
-  border: none;
-  outline: none;
-  box-sizing: border-box;
-  padding: 15px; /* Add padding for a boxy look */
-  font-size: 16px;
-  margin-bottom: 20px;
-  border-radius: 0; /* Square off the corners */
-  background-color: #f2f2f2;
-  border: 1px solid #ddd;
-}
+    .main button {
+      width: 90%;
+      height: 45px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #0b8457;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
 
-.main button {
-  padding: 0;
-  background-color: #128c7e;
-  letter-spacing: 0px;
-  font-weight: bold;
-  margin-bottom: 30px;
-  border-radius: 0; /* Square off the corners */
-  width: 100%;
-  height: 50px;
-  font-size: 18px;
-  color: #fff;
-  border: none;
-}
+    .main button:hover {
+      background-color: #086a45;
+    }
 
-#copyb {
-  padding: 0;
-  background-color: #25d366;
-  letter-spacing: 0px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  border-radius: 0; /* Square off the corners */
-  width: 100%;
-  height: 30px;
-  font-size: 15px;
-  color: #fff;
-  border: none;
-}
+    #copyb {
+      width: 90%;
+      height: 35px;
+      font-size: 14px;
+      color: #fff;
+      background-color: #1cb84e;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s ease;
+    }
 
-#copyb:hover,
-.main button:hover,
-.main input:hover {
-  cursor: pointer;
-  filter: brightness(1.1);
-}
+    #copyb:hover {
+      background-color: #179640;
+    }
 
+    #copy {
+      color: #333;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
+    .logo {
+      margin-bottom: 15px;
+    }
 
-.main input::placeholder {
-  color: #888;
-}
+    .loading {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255, 255, 255, 0.8);
+      z-index: 20;
+    }
 
-.main span {
-  position: relative;
-  display: block;
-}
+    .loading div {
+      border: 4px solid #ccc;
+      border-top: 4px solid #0b8457;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
 
-.main i {
-  position: absolute;
-  left: 15px;
-  color: #128c7e;
-  font-size: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-
-</style>
-</head>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style></head>
 <body>
  <div class="container">
   <div class="header">
-   <h1>KHAN-MDPAIRING</h1>
+   <h1>KHAN-MD PAIRING</h1>
   </div>
   <div class="main">
    <form>
