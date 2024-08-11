@@ -1,233 +1,112 @@
-<!DOCTYPE html><html><head>
-  <title>KHAN-MD</title>
-  <link rel="stylesheet" type="text/css" href="fontawesome/css/all.min.css">
-  <style>
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #c3ecb2, #75d5a7);
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-    }
+<html>
 
-    .container {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 350px;
-      padding: 30px;
-      border-radius: 20px;
-      background-color: #ffffff;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      z-index: 10;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 25px;
-    }
-
-    .header h1 {
-      color: #0b8457;
-      font-size: 22px;
-      margin: 0;
-    }
-
-    .main {
-      width: 100%;
-      text-align: center;
-    }
-
-    .main input {
-      width: 42%;
-      height: 35px;
-      border: 1px solid #ccc;
-      padding: 5px 10px;
-      font-size: 15px;
-      margin-bottom: 15px;
-      border-radius: 20px;
-      text-align: center;
-      transition: box-shadow 0.3s ease;
-      margin-right: 5px;
-    }
-
-    .main input:focus {
-      box-shadow: 0 0 10px #75d5a7;
-    }
-
-    .main button {
-      width: 90%;
-      height: 45px;
-      font-size: 16px;
-      color: #fff;
-      background-color: #0b8457;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .main button:hover {
-      background-color: #086a45;
-    }
-
-    #copyb {
-      width: 90%;
-      height: 35px;
-      font-size: 14px;
-      color: #fff;
-      background-color: #1cb84e;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: background-color 0.3s ease;
-    }
-
-    #copyb:hover {
-      background-color: #179640;
-    }
-
-    #copy {
-      color: #333;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .logo {
-      margin-bottom: 15px;
-    }
-
-    .loading {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background-color: rgba(255, 255, 255, 0.8);
-      z-index: 20;
-    }
-
-    .loading div {
-      border: 4px solid #ccc;
-      border-top: 4px solid #0b8457;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
-</head>
-<body>
-  <div class="loading">
-    <div></div>
-  </div>
-
-  <div class="container">
-    <div class="header">
-      <img class="logo" src="images/WhatsApp.svg" alt="WhatsApp Logo" width="40">
-      <h1>KHAN-MD Pairing Server</h1>
-    </div>
-    <div class="main">
-      <form>
-        <input type="text" id="countryCode" placeholder="+Code">
-        <input type="text" id="number" placeholder="Phone number">
-        <button id="submit">Get Pair Code</button>
-        <main id="pair"></main>
-      </form>
-    </div>
-  </div>
-
-  <script src="js/axios.min.js"></script>
-  <script>
-    async function getCountryCode() {
-      try {
-        let { data } = await axios('https://ipapi.co/json/');
-        document.getElementById('countryCode').value = data.country_calling_code || '+92';
-      } catch (error) {
-        document.getElementById('countryCode').value = '+92'; // Default to +92
-      }
-    }
-
-    window.onload = getCountryCode;
-
-    let a = document.getElementById("pair");
-    let b = document.getElementById("submit");
-    let c = document.getElementById("number");
-    let cc = document.getElementById("countryCode");
-
-    let isSubmitting = false;
-    let isCodeDisplayed = false;
-
-    async function Copy() {
-      let codeElement = document.getElementById("copy");
-      let codeText = codeElement ? codeElement.innerText.replace('CODE: ', '') : '';
-      if (codeText) {
-        await navigator.clipboard.writeText(codeText);
-        codeElement.innerText = "COPIED";
-        codeElement.style.color = "blue";
-        setTimeout(() => {
-          codeElement.innerText = `CODE: ${codeText}`;
-          codeElement.style.color = "black";
-        }, 500);
-      }
-    }
-
-    b.addEventListener("click", async (e) => {
-      e.preventDefault();
-
-      if (isCodeDisplayed) {
-        alert("Please wait for 2 minutes before requesting a new code.");
-        return;
-      }
-
-      if (isSubmitting) {
-        alert("Please wait for the code before trying to request again.");
-        return;
-      }
-
-      if (!c.value) {
-        a.innerHTML = '<a style="color:black;font-weight:bold">Enter your phone number</a><br><br>';
-      } else if (c.value.replace(/[^0-9]/g, "").length < 7) {
-        a.innerHTML = '<a style="color:black;font-weight:bold">Invalid number format</a><br><br>';
-      } else {
-        isSubmitting = true;
-        document.querySelector('.loading').style.display = 'flex';
-
-        const fullPhoneNumber = `${cc.value}${c.value.replace(/[^0-9]/g, "")}`;
-
-        try {
-          let { data } = await axios(`/pair?phone=${encodeURIComponent(fullPhoneNumber)}`);
-          let code = data.code || "Service Unavailable";
-          if (code !== "Service Unavailable") {
-            a.innerHTML = `<div><span id="copy" onclick="Copy()">CODE: ${code}</span></div><button id="copyb" onclick="Copy()">Copy Code</button>`;
-            isCodeDisplayed = true;
-            setTimeout(() => {
-              isCodeDisplayed = false;
-            }, 120000);
-          } else {
-            a.innerHTML = '<a style="color:red;font-weight:bold">Error: Service Unavailable. Please try again later.</a><br><br>';
-          }
-        } catch (error) {
-          a.innerHTML = '<a style="color:red;font-weight:bold">Error: Please try again later.</a><br><br>';
-        } finally {
-          document.querySelector('.loading').style.display = 'none';
-          isSubmitting = false;
+<head>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column; 
+            justify-content: center;
+            align-items: center;
+            background: #000;
         }
-      }
-    });
-  </script>
 
+        .button-container {
+            margin-bottom: 20px; 
+        }
 
-</body></html>
+        .glow-on-hover {
+            width: 220px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 26px;
+            font-weight: 600;
+            height: 50px;
+            border: none;
+            outline: none;
+            color: #fff;
+            background: #111;
+            cursor: pointer;
+            position: relative;
+            z-index: 0;
+            border-radius: 10px;
+        }
+
+        .glow-on-hover:before {
+            content: '';
+            background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            background-size: 400%;
+            z-index: -1;
+            filter: blur(5px);
+            width: calc(100% + 4px);
+            height: calc(100% + 4px);
+            animation: glowing 10s linear infinite;
+            opacity: 0;
+            transition: opacity .3s ease-in-out;
+            border-radius: 10px;
+        }
+
+        .glow-on-hover:active {
+            color: #000;
+        }
+
+        .glow-on-hover:active:after {
+            background: transparent;
+        }
+
+        .glow-on-hover:before {
+            opacity: 1;
+        }
+
+        .glow-on-hover:after {
+            z-index: -1;
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #111;
+            left: 0;
+            top: 0;
+            border-radius: 10px;
+        }
+
+        @keyframes glowing {
+            0% {
+                background-position: 0 0;
+            }
+
+            50% {
+                background-position: 400% 0;
+            }
+
+            100% {
+                background-position: 0 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div class="button-container">
+        <button class="glow-on-hover" type="button" onclick="window.location.href='./qr'">Via Qr</button>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="button-container">
+        <button class="glow-on-hover" type="button" onclick="window.location.href='./code'">Via Code</button>
+    </div>
+    
+    <link rel="import" href="./loader.html">
+
+    
+</body>
+
+</html>
